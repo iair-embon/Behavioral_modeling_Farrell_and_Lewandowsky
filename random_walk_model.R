@@ -3,16 +3,19 @@
 nreps <- 10000
 nsamples <- 2000
 
-drift <- 0.0 # non informative stimulus
+drift <- 0.03 # non informative stimulus
 sdrw <- 0.3
 criterion <- 3
+t2tsd <- c(0.0,0.025)
 
 latencies <- rep(0,nreps)
 responses <- rep(0,nreps)
 evidence <- matrix(0, nreps, nsamples+1)
 
 for (i in c(1:nreps)) {
-  evidence [i,] <- cumsum(c(0,rnorm(nsamples, drift, sdrw)))
+  sp <- rnorm(1,0,t2tsd[1])
+  dr <- rnorm(1, drift, t2tsd[2])
+  evidence [i,] <- cumsum(c(sp,rnorm(nsamples, dr, sdrw)))
   p <- which(abs(evidence[i,])>criterion)[1]
   responses[i] <- sign(evidence[i,p])
   latencies[i] <- p
